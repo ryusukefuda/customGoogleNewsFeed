@@ -4,7 +4,7 @@ class Feed
 
   def parse
 
-    personsEntertainment = %w(
+    persons_entertainers = %w(
                           黒木メイサ
                           新垣結衣
                           瀬戸康史
@@ -22,7 +22,7 @@ class Feed
                           清水翔太
                           西野カナ
     )
-    personsSports = %w(
+    persons_athletes = %w(
                     田中将大
                     坂本勇人
                     吉川光夫
@@ -41,8 +41,8 @@ class Feed
     article_url = ''
     persons = []
 
-    persons += personsEntertainment
-    persons += personsSports
+    persons.concat persons_entertainers
+    persons.concat persons_athletes
 
     persons.each do |name|
       feedUrl = baseurl_googlenews + name
@@ -61,12 +61,21 @@ class Feed
       }
     end
 
-    result_parse = {
-      'result' => true,
-      'status' => 200,
-    }
-    result_parse['body'] = news_array_raw
+    if news_array_raw.blank? then
+      result_parse = {
+        'result' => true,
+        'status' => 500,
+      }
+      result_parse['body'] = "Internal Error has occurred"
+    else
+      result_parse = {
+        'result' => true,
+        'status' => 200,
+      }
+      result_parse['body'] = news_array_raw
+    end
     result_parse
+
   end
 
 end
