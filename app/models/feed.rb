@@ -61,18 +61,19 @@ class Feed
       }
     end
 
-    if news_array_raw.blank? then
+    if news_array_raw.blank?
       result_parse = {
-        'result' => true,
-        'status' => 500,
+        result: true,
+        status: 500,
+        body: "Internal Error has occurred"
       }
-      result_parse['body'] = "Internal Error has occurred"
     else
       result_parse = {
-        'result' => true,
-        'status' => 200,
+        result: true,
+        status: 200,
+        body: news_array_raw
       }
-      result_parse['body'] = news_array_raw
+
     end
     result_parse
 
