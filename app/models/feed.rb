@@ -61,22 +61,8 @@ class Feed
       }
     end
 
-    if news_array_raw.blank?
-      result_parse = {
-        result: true,
-        status: 500,
-        body: "Internal Error has occurred"
-      }
-    else
-      result_parse = {
-        result: true,
-        status: 200,
-        body: news_array_raw
-      }
-
-    end
-    result_parse
-
+    news_array_raw
+    
   end
 
 end
