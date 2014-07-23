@@ -2,7 +2,7 @@ require 'uri'
 
 class Feed
 
-  def parse
+  def parse (start=0, count=10)
 
     persons_entertainers = %w(
                           黒木メイサ
@@ -61,8 +61,24 @@ class Feed
       }
     end
 
-    news_array_raw
-    
+    count_array = news_array_raw.slice(start,count) || []
+
+    if count_array.blank?
+      result_parse = {
+        result: true,
+        status: 500,
+        body: "Internal Error has occurred"
+      }
+    else
+      result_parse = {
+        result: true,
+        status: 200,
+        body: count_array
+      }
+    end
+
+    result_parse
+
   end
 
 end
