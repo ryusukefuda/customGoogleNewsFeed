@@ -61,7 +61,7 @@ class Feed
       }
     end
 
-    count_array = news_array_raw.slice(start,count) || []
+    count_array = news_array_raw.sort{|a,b| b[:date] <=> a[:date]}.slice(start,count) || []
 
     if count_array.blank?
       result_parse = {
