@@ -2,7 +2,7 @@ require 'uri'
 
 class Feed
 
-  def parse (start=0, count=10)
+  def parse(start=0, count=10)
 
     persons_entertainers = %w(
                           黒木メイサ
