@@ -56,8 +56,9 @@ class Feed
 
       news_array_raw << {
           title: entry.title,
-          article_url: article_url,
-          date: entry.published
+          article_url: URI.unescape(article_url),
+          date: entry.published,
+          name: name 
       }
     end
 
