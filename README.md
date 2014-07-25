@@ -15,6 +15,7 @@ put multiwords google news rss into one.
           "title":
           "article_url":
           "date":
+          "name":
         }]
     }
 
