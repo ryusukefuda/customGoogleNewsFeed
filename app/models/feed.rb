@@ -2,7 +2,7 @@ require 'uri'
 
 class Feed
 
-  def parse
+  def parse(start=0, count=10)
 
     persons_entertainers = %w(
                           黒木メイサ
@@ -56,12 +56,15 @@ class Feed
 
       news_array_raw << {
           title: entry.title,
-          article_url: article_url,
-          date: entry.published
+          article_url: URI.unescape(article_url),
+          date: entry.published,
+          name: name 
       }
     end
 
-    if news_array_raw.blank?
+    count_array = news_array_raw.sort{|a,b| b[:date] <=> a[:date]}.slice(start,count) || []
+
+    if count_array.blank?
       result_parse = {
         result: true,
         status: 500,
@@ -71,10 +74,10 @@ class Feed
       result_parse = {
         result: true,
         status: 200,
-        body: news_array_raw
+        body: count_array
       }
-
     end
+
     result_parse
 
   end

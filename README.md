@@ -4,7 +4,7 @@ Out put custom google news feed api in Ruby.
 put multiwords google news rss into one.
 
 ###GET API
- {BASEURL}/parsing/index.html
+ {BASEURL}/parsing/index
 
 
 
@@ -15,8 +15,17 @@ put multiwords google news rss into one.
           "title":
           "article_url":
           "date":
+          "name":
         }]
     }
+
+###Parameters
+| Name       | Must | Description                   | Default | Sample |
+|:-----------|-----:|:-----------------------------:|:-------:|:------:|
+| start      |      | Start position to get article |    0    |   10   |
+| count      |      | Number of article             |    10   |   15   |
+
+
 
 ###Usage
 You can put your words in this line like this.
