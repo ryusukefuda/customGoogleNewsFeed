@@ -37,6 +37,7 @@ GEM
       execjs
     coffee-script-source (1.7.0)
     curb (0.8.5)
+    dalli (2.7.2)
     erubis (2.7.0)
     execjs (2.1.0)
     feedjira (1.3.0)
@@ -127,6 +128,7 @@ PLATFORMS
 
 DEPENDENCIES
   coffee-rails (~> 4.0.0)
+  dalli
   feedjira
   jbuilder (~> 2.0)
   jquery-rails

@@ -21,6 +21,26 @@ class Feed
                           豊田エリー
                           清水翔太
                           西野カナ
+                          ながと帰葉
+                          黒田エイミ
+                          長瀬実夕
+                          玉置成実
+                          植田萌子
+                          生田竜聖
+                          森カンナ
+                          秋元才加
+                          重盛さと美
+                          辻井伸行
+                          佐藤ありさ
+                          大島優子
+                          菜々緒
+                          菊田大輔
+                          亀井絵里
+                          多部未華子
+                          鈴木勝吾
+                          清水翔太
+                          千葉雄大
+                          佐藤健
     )
     persons_athletes = %w(
                     田中将大
@@ -33,6 +53,24 @@ class Feed
                     福原愛
                     井岡一翔
                     亀山耕平
+                    前田健太
+                    小塚崇彦
+                    狩野舞子
+                    斎藤佑樹
+                    渡部暁斗
+                    遠藤康
+                    遠藤康
+                    浅見八瑠奈
+                    秋山翔吾
+                    熊倉紫野
+                    阿部香菜
+                    上田春佳
+                    森本貴幸
+                    伊藤竜馬
+                    井道千尋
+                    若林舞衣子
+                    浅田舞
+                    國母和宏
     )
     baseurl_googlenews = "https://news.google.com/news/feeds?hl=ja&ned=us&ie=UTF-8&oe=UTF-8&output=rss&q="
 
@@ -44,22 +82,27 @@ class Feed
     persons.concat persons_entertainers
     persons.concat persons_athletes
 
-    persons.each do |name|
-      feedUrl = baseurl_googlenews + name
-      feedUrl = URI.escape(feedUrl)
-      feed = Feedjira::Feed.fetch_and_parse(feedUrl)
-
-      entry = feed.entries.first
-      url_raw = entry.url
-      article_url = url_raw.match(/url=.*$/).to_s
-      article_url.slice!(0,4)
-
-      news_array_raw << {
-          title: entry.title,
-          article_url: URI.unescape(article_url),
-          date: entry.published,
-          name: name 
-      }
+    news_array_raw = Rails.cache.read("all_articles", expires_in: 3.hour)
+        if news_array_raw.blank?
+            news_array_raw = []
+            persons.each do |name|
+              feedUrl = baseurl_googlenews + name
+              feedUrl = URI.escape(feedUrl)
+              feed = Feedjira::Feed.fetch_and_parse(feedUrl)
+              entry = feed.entries.first
+              unless entry.blank?
+                url_raw = entry.url
+                article_url = url_raw.match(/url=.*$/).to_s
+                article_url.slice!(0,4)
+                news_array_raw << {
+                    title: entry.title,
+                    article_url: article_url,
+                    date: entry.published,
+                    name: name
+                }
+              end
+        end
+        Rails.cache.write("all_articles", news_array_raw, expires_in: 1.hour)
     end
 
     count_array = news_array_raw.sort{|a,b| b[:date] <=> a[:date]}.slice(start,count) || []
