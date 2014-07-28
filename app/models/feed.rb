@@ -74,7 +74,6 @@ class Feed
     )
     baseurl_googlenews = "https://news.google.com/news/feeds?hl=ja&ned=us&ie=UTF-8&oe=UTF-8&output=rss&q="
 
-    news_array_raw = []
     result_parse = {}
     article_url = ''
     persons = []
@@ -82,27 +81,26 @@ class Feed
     persons.concat persons_entertainers
     persons.concat persons_athletes
 
-    news_array_raw = Rails.cache.read("all_articles", expires_in: 3.hour)
-        if news_array_raw.blank?
-            news_array_raw = []
-            persons.each do |name|
-              feedUrl = baseurl_googlenews + name
-              feedUrl = URI.escape(feedUrl)
-              feed = Feedjira::Feed.fetch_and_parse(feedUrl)
-              entry = feed.entries.first
-              unless entry.blank?
-                url_raw = entry.url
-                article_url = url_raw.match(/url=.*$/).to_s
-                article_url.slice!(0,4)
-                news_array_raw << {
-                    title: entry.title,
-                    article_url: article_url,
-                    date: entry.published,
-                    name: name
-                }
-              end
+    news_array_raw = Rails.cache.read("all_articles", expires_in: 3.hour) || []
+      if news_array_raw.blank?
+        persons.each do |name|
+          feedUrl = baseurl_googlenews + name
+          feedUrl = URI.escape(feedUrl)
+          feed = Feedjira::Feed.fetch_and_parse(feedUrl)
+          entry = feed.entries.first
+          unless entry.blank?
+            url_raw = entry.url
+            article_url = url_raw.match(/url=.*$/).to_s
+            article_url.slice!(0,4)
+            news_array_raw << {
+              title: entry.title,
+              article_url: article_url,
+              date: entry.published,
+              name: name
+            }
         end
-        Rails.cache.write("all_articles", news_array_raw, expires_in: 1.hour)
+      end
+      Rails.cache.write("all_articles", news_array_raw, expires_in: 1.hour)
     end
 
     count_array = news_array_raw.sort{|a,b| b[:date] <=> a[:date]}.slice(start,count) || []
