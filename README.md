@@ -3,6 +3,9 @@
 Out put custom google news feed api in Ruby.  
 put multiwords google news rss into one.
 
+GoogeNewsFeedを使って複数の固定の単語のニュースを日付順に並び替えた  
+APIを出力するRailsプロジェクトです。サンプルでは芸能人を設定しています。
+
 ###GET API
  {BASEURL}/parsing/index
 
@@ -25,7 +28,7 @@ put multiwords google news rss into one.
 | start      |      | Start position to get article |    0    |   10   |
 | count      |      | Number of article             |    10   |   15   |
 
-
+{BASEURL}/parsing/index?start=5&count=15
 
 ###Usage
 You can put your words in this line like this.
