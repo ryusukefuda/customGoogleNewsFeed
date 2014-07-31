@@ -81,7 +81,7 @@ class Feed
     persons.concat persons_entertainers
     persons.concat persons_athletes
 
-    news_array_raw = Rails.cache.read("all_articles", expires_in: 3.hour) || []
+    news_array_raw = Rails.cache.read("all_articles", expires_in: 6.hour) || []
       if news_array_raw.blank?
         persons.each do |name|
           feedUrl = baseurl_googlenews + name
@@ -100,7 +100,7 @@ class Feed
             }
         end
       end
-      Rails.cache.write("all_articles", news_array_raw, expires_in: 1.hour)
+      Rails.cache.write("all_articles", news_array_raw, expires_in: 6.hour)
     end
 
     count_array = news_array_raw.sort{|a,b| b[:date] <=> a[:date]}.slice(start,count) || []
