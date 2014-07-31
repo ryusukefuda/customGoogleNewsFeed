@@ -10,7 +10,7 @@
 /tmp
 
 # Production.rb
-/config/environments/production.rb
+#/config/environments/production.rb
 
 # Ignore other unneeded files.
 doc/

@@ -54,7 +54,7 @@ Rails.application.configure do
   # Use a different cache store in production.
 
   # develop
-  config.cache_store = :dalli_store
+  # config.cache_store = :dalli_store
 
   if ENV["pub-memcache-16395.us-east-1-3.2.ec2.garantiadata.com:16395"]
     config.cache_store = :dalli_store, ENV["pub-memcache-16395.us-east-1-3.2.ec2.garantiadata.com:16395"].split(','), { :username => ENV["memcached-app27448316"], :password => ENV["MANQfMIMPKKdmi1k"] }
