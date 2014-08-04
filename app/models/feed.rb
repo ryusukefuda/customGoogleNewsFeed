@@ -85,6 +85,7 @@ class Feed
     persons.concat persons_athletes
 
     news_array_raw = Rails.cache.read("all_articles", expires_in: 6.hour) || []
+
       news_array_raw = []
       if news_array_raw.blank?
         persons.each do |name|
@@ -98,11 +99,12 @@ class Feed
             article_url = url_raw.match(/url=.*$/).to_s
             article_url.slice!(0,4)
 
-            doc = Nokogiri::HTML(entry.summary)
-            url_nokogiri = doc.css('img').attribute('src')
+            url_nokogiri = Nokogiri::HTML(entry.summary).css('img').attribute('src')
             unless url_nokogiri.blank?
               image_url = "http:".concat(url_nokogiri)
             end
+
+            Rails.logger.debug("image_url_noko: #{image_url}")
 
             news_array_raw << {
               title: entry.title,
@@ -113,7 +115,9 @@ class Feed
             }
         end
       end
+
       Rails.cache.write("all_articles", news_array_raw, expires_in: 6.hour)
+
     end
 
     count_array = news_array_raw.sort{|a,b| b[:date] <=> a[:date]}.slice(start,count) || []
