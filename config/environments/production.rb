@@ -52,7 +52,14 @@ Rails.application.configure do
   # config.logger = ActiveSupport::TaggedLogging.new(SyslogLogger.new)
 
   # Use a different cache store in production.
-   config.cache_store = :dalli_store
+
+  # develop
+  # config.cache_store = :dalli_store
+
+  if ENV["pub-memcache-16395.us-east-1-3.2.ec2.garantiadata.com:16395"]
+    config.cache_store = :dalli_store, ENV["pub-memcache-16395.us-east-1-3.2.ec2.garantiadata.com:16395"].split(','), { :username => ENV["memcached-app27448316"], :password => ENV["MANQfMIMPKKdmi1k"] }
+  end
+
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.action_controller.asset_host = "http://assets.example.com"
