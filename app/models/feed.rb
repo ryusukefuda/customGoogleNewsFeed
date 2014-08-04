@@ -1,15 +1,17 @@
 require 'uri'
+require 'nokogiri'
 
 class Feed
 
   def parse(start=0, count=10)
 
+
     persons_entertainers = %w(
                           黒木メイサ
+                          MayJ
                           新垣結衣
                           瀬戸康史
                           三浦翔平
-                          MayJ
                           加藤ミリヤ
                           濱田岳
                           中尾明慶
@@ -42,6 +44,7 @@ class Feed
                           千葉雄大
                           佐藤健
     )
+
     persons_athletes = %w(
                     田中将大
                     坂本勇人
@@ -82,8 +85,10 @@ class Feed
     persons.concat persons_athletes
 
     news_array_raw = Rails.cache.read("all_articles", expires_in: 6.hour) || []
+
       if news_array_raw.blank?
         persons.each do |name|
+          image_url = nil
           feedUrl = baseurl_googlenews + name
           feedUrl = URI.escape(feedUrl)
           feed = Feedjira::Feed.fetch_and_parse(feedUrl)
@@ -92,15 +97,26 @@ class Feed
             url_raw = entry.url
             article_url = url_raw.match(/url=.*$/).to_s
             article_url.slice!(0,4)
+
+            url_nokogiri = Nokogiri::HTML(entry.summary).css('img').attribute('src')
+            unless url_nokogiri.blank?
+              image_url = "http:".concat(url_nokogiri)
+            end
+
+            Rails.logger.debug("image_url_noko: #{image_url}")
+
             news_array_raw << {
               title: entry.title,
               article_url: article_url,
+              image_url: image_url,
               date: entry.published,
               name: name
             }
         end
       end
+
       Rails.cache.write("all_articles", news_array_raw, expires_in: 6.hour)
+      
     end
 
     count_array = news_array_raw.sort{|a,b| b[:date] <=> a[:date]}.slice(start,count) || []
