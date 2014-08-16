@@ -11,6 +11,8 @@ class ParsingController < ApplicationController
 
     @news_json = feed.parse(start, count).to_json
 
+    render:json => feed.parse(start, count).to_json
+
   end
 
 end

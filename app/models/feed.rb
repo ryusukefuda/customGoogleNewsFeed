@@ -116,7 +116,7 @@ class Feed
       end
 
       Rails.cache.write("all_articles", news_array_raw, expires_in: 6.hour)
-      
+
     end
 
     count_array = news_array_raw.sort{|a,b| b[:date] <=> a[:date]}.slice(start,count) || []
